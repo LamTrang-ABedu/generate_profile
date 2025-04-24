@@ -6,16 +6,12 @@ function generateProfileData(password, email, locale = 'en_US') {
     let fakerInstance;
     let actualLocale = locale;
 
-    // Initialize Faker with the specified locale, fallback if needed
+    // Set the locale globally for faker
     try {
-        fakerInstance = new faker.Faker({ locale: [locale, 'en_US'] });
-        if (fakerInstance.metadata.code !== locale && fakerInstance.metadata.code !== locale.split('_')[0]) {
-            console.warn(`Locale '${locale}' might not be fully supported. Fallback to '${fakerInstance.metadata.code}'.`);
-            actualLocale = fakerInstance.metadata.code;
-        }
+        faker.locale = locale;
     } catch (error) {
         console.error(`Error initializing Faker with locale '${locale}': ${error}. Falling back to 'en_US'.`);
-        fakerInstance = new faker.Faker({ locale: ['en_US'] });
+        faker.locale = 'en_US';
         actualLocale = 'en_US';
     }
 
