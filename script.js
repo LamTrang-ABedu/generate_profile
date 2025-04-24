@@ -1,112 +1,109 @@
-// Sử dụng thư viện faker đã được nhúng từ CDN
+// Import the Faker library from a CDN or fallback
 const { faker } = window;
 
-// Hàm tạo dữ liệu profile, giờ nhận tham số từ input
+// Generate profile data based on user inputs
 function generateProfileData(password, email, locale = 'en_US') {
-    const currentFaker = window.faker || import faker from 'faker';
-    currentFaker.locale = locale;
-    let actualLocale = locale; // Lưu lại locale thực tế được dùng
+    let fakerInstance;
+    let actualLocale = locale;
 
-    // Cố gắng khởi tạo Faker với locale người dùng, nếu lỗi thì dùng en_US
-    // Sử dụng mảng locale để Faker tự động fallback nếu locale chính không có đủ data
+    // Initialize Faker with the specified locale, fallback if needed
     try {
-        // Ví dụ: nếu locale là 'vi_VN', nó sẽ thử 'vi_VN' trước, rồi đến 'en_US'
-        currentFaker = new faker.Faker({ locale: [locale, 'en_US'] });
-        console.log(`Using locale array: [${locale}, 'en_US']`);
-        // Kiểm tra xem locale mong muốn có thực sự được dùng không (có thể Faker chỉ dùng fallback)
-        // Cách kiểm tra này không hoàn hảo 100% nhưng là một gợi ý
-        if (currentFaker.metadata.code !== locale && currentFaker.metadata.code !== locale.split('_')[0]) {
-             console.warn(`Locale '${locale}' might not be fully supported or available, Faker might be using fallback '${currentFaker.metadata.code}'.`);
-             actualLocale = currentFaker.metadata.code; // Cập nhật locale thực tế
-        } else {
-            actualLocale = locale; // Locale mong muốn đã được dùng
+        fakerInstance = new faker.Faker({ locale: [locale, 'en_US'] });
+        if (fakerInstance.metadata.code !== locale && fakerInstance.metadata.code !== locale.split('_')[0]) {
+            console.warn(`Locale '${locale}' might not be fully supported. Fallback to '${fakerInstance.metadata.code}'.`);
+            actualLocale = fakerInstance.metadata.code;
         }
-
-    } catch (e) {
-        console.error(`Error initializing Faker with locale '${locale}': ${e}. Falling back to 'en_US'.`);
-        currentFaker = new faker.Faker({ locale: ['en_US'] }); // Chỉ dùng en_US nếu lỗi hoàn toàn
+    } catch (error) {
+        console.error(`Error initializing Faker with locale '${locale}': ${error}. Falling back to 'en_US'.`);
+        fakerInstance = new faker.Faker({ locale: ['en_US'] });
         actualLocale = 'en_US';
     }
 
-    // Tạo dữ liệu
-    const userLastName = currentFaker.person.lastName();
-    const firstName = currentFaker.person.firstName();
-
-    const profile = {
-        // Thông tin cơ bản
+    // Generate profile data
+    const lastName = fakerInstance.person.lastName();
+    const firstName = fakerInstance.person.firstName();
+    return {
+        // Basic information
         "SF ID": "",
-        "password": password, // Sử dụng password từ input
-        "email": email,       // Sử dụng email từ input
-        "first_name": firstName,
-        "last_name": userLastName,
-        "full_name": `${firstName} ${userLastName}`,
-        "gender": currentFaker.person.sex(), // 'male' hoặc 'female'
-        "birthdate": currentFaker.date.birthdate({ min: 18, max: 75, mode: 'age' }).toLocaleDateString('en-CA'), // YYYY-MM-DD
-        "ssn": actualLocale.startsWith('en') ? currentFaker.finance.ssn() : "N/A", // SSN chủ yếu cho US
+        password,
+        email,
+        first_name: firstName,
+        last_name: lastName,
+        full_name: `${firstName} ${lastName}`,
+        gender: fakerInstance.person.sex(),
+        birthdate: fakerInstance.date.birthdate({ min: 18, max: 75, mode: 'age' }).toLocaleDateString('en-CA'),
+        ssn: actualLocale.startsWith('en') ? fakerInstance.finance.ssn() : "N/A",
 
-        // Địa chỉ
-        "street": currentFaker.location.streetAddress(),
-        "city": currentFaker.location.city(),
-        "state": currentFaker.location.state({ abbreviated: true }), // Luôn thử lấy viết tắt
-        "zip": currentFaker.location.zipCode(),
-        "country": currentFaker.location.country(), // <--- Lấy country dựa trên locale của Faker
+        // Address
+        street: fakerInstance.location.streetAddress(),
+        city: fakerInstance.location.city(),
+        state: fakerInstance.location.state({ abbreviated: true }),
+        zip: fakerInstance.location.zipCode(),
+        country: fakerInstance.location.country(),
 
-        // Thông tin liên lạc
-        "phone": actualLocale.startsWith('en') ? currentFaker.phone.number('(###) ###-####') : currentFaker.phone.number(), // Định dạng US hoặc chung
-        "cell_phone": actualLocale.startsWith('en') ? currentFaker.phone.number('(###) ###-####') : currentFaker.phone.number(),
+        // Contact information
+        phone: actualLocale.startsWith('en') ? fakerInstance.phone.number('(###) ###-####') : fakerInstance.phone.number(),
+        cell_phone: actualLocale.startsWith('en') ? fakerInstance.phone.number('(###) ###-####') : fakerInstance.phone.number(),
 
-        // Thông tin cha mẹ
-        "parent1_first_name": currentFaker.person.firstName(),
-        "parent1_last_name": userLastName,
-        "parent2_first_name": currentFaker.person.firstName(),
-        "parent2_last_name": currentFaker.person.lastName(),
-        "secondary_email": currentFaker.internet.email(),
+        // Parent information
+        parent1_first_name: fakerInstance.person.firstName(),
+        parent1_last_name: lastName,
+        parent2_first_name: fakerInstance.person.firstName(),
+        parent2_last_name: fakerInstance.person.lastName(),
+        secondary_email: fakerInstance.internet.email(),
     };
-    return profile;
 }
 
-// Hàm hiển thị bảng (giữ nguyên)
+// Display the profile data as an HTML table
 function displayProfileAsTable(profileData) {
     const container = document.getElementById('profile-table-container');
     if (!container) return;
 
-    let tableHTML = '<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>';
-    for (const key in profileData) {
-        if (profileData.hasOwnProperty(key)) {
-            // Xử lý giá trị null hoặc undefined để hiển thị chuỗi rỗng
-            const value = profileData[key] === null || profileData[key] === undefined ? "" : profileData[key];
-            tableHTML += `<tr><td>${key}</td><td>${value}</td></tr>`;
-        }
-    }
-    tableHTML += '</tbody></table>';
+    const tableHTML = `
+        <table>
+            <thead>
+                <tr><th>Field</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+                ${Object.entries(profileData).map(([key, value]) => `
+                    <tr>
+                        <td>${key}</td>
+                        <td>${value ?? ""}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
     container.innerHTML = tableHTML;
 }
 
-// Hàm được gọi khi nhấn nút "Generate Profile"
+// Handle the "Generate Profile" button click event
 function handleGenerateClick() {
-    // Lấy giá trị từ các trường input
     const email = document.getElementById('emailInput').value.trim();
-    const password = document.getElementById('passwordInput').value; // Không trim password
+    const password = document.getElementById('passwordInput').value;
     let locale = document.getElementById('localeInput').value.trim();
 
-    // Sử dụng locale mặc định nếu người dùng không nhập gì
+    // Default to 'en_US' if locale input is empty
     if (!locale) {
         locale = 'en_US';
-        document.getElementById('localeInput').value = locale; // Cập nhật lại ô input cho rõ
+        document.getElementById('localeInput').value = locale;
     }
 
-    // Kiểm tra email cơ bản (không bắt buộc nhưng nên có)
+    // Validate email input
     if (!email || !email.includes('@')) {
         alert('Please enter a valid email address.');
         return;
     }
 
-    // Gọi hàm tạo profile với dữ liệu input
+    // Generate and display profile
     const profile = generateProfileData(password, email, locale);
-
-    // Hiển thị profile
     displayProfileAsTable(profile);
 }
 
-// Không tự động chạy khi tải trang nữa, chỉ chạy khi nhấn nút
-// document.addEventListener('DOMContentLoaded', handleGenerateClick);
+// Attach event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const generateButton = document.getElementById('generateProfileButton');
+    if (generateButton) {
+        generateButton.addEventListener('click', handleGenerateClick);
+    }
+});
