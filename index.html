@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Profile Generator</title>
+    <link rel="stylesheet" href="style.css"> <!-- Link tới file CSS -->
+</head>
+<body>
+    <h1>Fake Profile Generator</h1>
+
+    <!-- === KHU VỰC INPUT === -->
+    <div class="input-group">
+        <label for="emailInput">Email:</label>
+        <input type="email" id="emailInput" placeholder="Enter email address" value="abedu.ninhbinh@gmail.com">
+    </div>
+    <div class="input-group">
+        <label for="passwordInput">Password:</label>
+        <input type="password" id="passwordInput" placeholder="Enter password" value="Lamthon@1234">
+    </div>
+    <div class="input-group">
+        <label for="localeInput">Locale:</label>
+        <input type="text" id="localeInput" placeholder="e.g., en_US, vi_VN, tr_TR, fr_FR" value="en_US">
+        <small>Determines language and country.</small>
+    </div>
+    <!-- === KẾT THÚC KHU VỰC INPUT === -->
+
+    <button onclick="handleGenerateClick()">Generate Profile</button>
+
+    <div id="profile-table-container">
+        <!-- Bảng profile sẽ được chèn vào đây bằng JavaScript -->
+        Click "Generate Profile" to start.
+    </div>
+
+    <!-- Nhúng thư viện @faker-js/faker từ CDN -->
+    <!-- Luôn đảm bảo phiên bản ổn định, kiểm tra trên cdnjs.com nếu cần -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/8.4.1/faker.min.js" integrity="sha512-QHdWH6nHA59PO7X/5UTn2/Cg77QBGZ/Awz6ARVf9HLM/QSYSL/3H/R7Ph47+x+h7SS+9J+QhFvIsj71/t7XGsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Link tới file JavaScript của bạn -->
+    <script src="script.js"></script>
+</body>
+</html>
