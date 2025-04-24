@@ -3,7 +3,8 @@ const { faker } = window;
 
 // Hàm tạo dữ liệu profile, giờ nhận tham số từ input
 function generateProfileData(password, email, locale = 'en_US') {
-    let currentFaker;
+    const currentFaker = window.faker || require('faker');
+    currentFaker.locale = locale;
     let actualLocale = locale; // Lưu lại locale thực tế được dùng
 
     // Cố gắng khởi tạo Faker với locale người dùng, nếu lỗi thì dùng en_US
