@@ -1,9 +1,9 @@
-// Import the Faker library from a CDN or fallback
-const { faker } = window;
+// Import the Faker library
+import { faker } from '@faker-js/faker';
 
 // Generate profile data based on user inputs
 function generateProfileData(password, email, locale = 'en_US') {
-    let fakerInstance;
+    let fakerInstance = faker;
     let actualLocale = locale;
 
     // Set the locale globally for faker
