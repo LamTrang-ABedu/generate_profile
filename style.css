@@ -1,0 +1,106 @@
+body {
+    font-family: sans-serif;
+    margin: 20px;
+    line-height: 1.6; /* Cải thiện khả năng đọc */
+}
+
+h1 {
+    color: #333;
+    text-align: center; /* Căn giữa tiêu đề */
+    margin-bottom: 30px;
+}
+
+/* Định dạng nhóm input */
+.input-group {
+    margin-bottom: 15px;
+    max-width: 400px; /* Giới hạn chiều rộng form */
+    margin-left: auto; /* Căn giữa nhóm input */
+    margin-right: auto;
+}
+
+.input-group label {
+    display: block; /* Nhãn nằm trên input */
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.input-group input[type="email"],
+.input-group input[type="password"],
+.input-group input[type="text"] {
+    width: 100%; /* Input chiếm toàn bộ chiều rộng của group */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước */
+}
+
+.input-group small {
+    display: block;
+    margin-top: 3px;
+    font-size: 0.85em;
+    color: #777;
+}
+
+button {
+    display: block; /* Nút chiếm một dòng riêng */
+    padding: 12px 20px;
+    margin: 20px auto; /* Căn giữa nút */
+    cursor: pointer;
+    background-color: #007bff; /* Màu nút */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    transition: background-color 0.2s ease; /* Hiệu ứng hover */
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#profile-table-container {
+    margin-top: 30px; /* Tăng khoảng cách trên bảng */
+    max-width: 800px; /* Giới hạn chiều rộng bảng */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* Tăng bóng đổ */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px 15px; /* Tăng padding */
+    text-align: left;
+    vertical-align: top;
+}
+
+th {
+    background-color: #f8f9fa; /* Màu nền header nhạt hơn */
+    font-weight: bold;
+    color: #333;
+}
+
+td:first-child {
+    font-weight: bold;
+    width: 30%; /* Điều chỉnh lại chiều rộng cột */
+    word-break: break-word;
+    background-color: #fdfdfd; /* Màu nền nhẹ cho cột key */
+}
+
+td:last-child {
+    width: 70%;
+    word-break: break-word;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1; /* Hiệu ứng hover cho hàng */
+}
